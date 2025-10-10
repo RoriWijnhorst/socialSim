@@ -1,46 +1,117 @@
 #' Fit one of the available Stan models to simulated datasets
 #'
 #' @param sim Output from \code{simulate_data()}.
-#' @param model Name of the Stan model to use (choose from the available options).
-#' @param backend Either "cmdstanr" (default) to compile Stan code, or
-#'        "precompiled" to run an existing executable in inst/stan/.
-#' @param iter Number of iterations per chain.
+#' @param model Name of the Stan model to use (choose from available options).
+#' @param iter Number of iterations per chain (default = 1000).
 #' @param seed Random seed for reproducibility.
-#' @param cores Number of CPU cores (chains are run sequentially if backend = "precompiled").
+#' @param cores Number of CPU cores (used if cmdstanr is available).
 #'
 #' @return A list of fitted model summaries, one per dataset.
 #' @export
 run_model <- function(sim,
-                      model = "Trait_only.stan",
-                      backend = c("cmdstanr", "precompiled"),
+                      model = NULL,
                       iter = 1000,
                       seed = 1234,
                       cores = 1) {
 
-  backend <- match.arg(backend)
-
   stopifnot(inherits(sim, "socialSim_data"))
+
   if (missing(cores) || !is.numeric(cores) || cores < 1)
     stop("Please specify a valid number of cores (e.g., cores = 4).")
 
-  # Locate Stan model or precompiled executable
+  # -------------------------------------------------------------------------
+  # 1. Define available models
+  # -------------------------------------------------------------------------
+  available_models <- c(
+    "I&R.stan",
+    "VP.stan",
+    "Trait.stan",
+    "Trait_only.stan",
+    "Trait_RS.stan",
+    "Trait_EIV.stan"
+  )
+
+  # -------------------------------------------------------------------------
+  # 2. Handle missing or invalid input
+  # -------------------------------------------------------------------------
+  if (is.null(model)) {
+    message("Please choose one of the following available models:\n",
+            paste0("  - ", available_models, collapse = "\n"))
+    stop("No model selected. Specify a model, e.g. model = 'Trait.stan'.")
+  }
+
+  if (!model %in% available_models) {
+    stop("Invalid model name. Available options are:\n",
+         paste0("  - ", available_models, collapse = "\n"))
+  }
+
+  # Locate Stan model and executable
   model_path <- system.file("stan", model, package = "socialSim")
   exe_path <- sub("\\.stan$", ifelse(.Platform$OS.type == "windows", ".exe", ""), model_path)
-
   if (model_path == "" && exe_path == "")
-    stop("Model not found in inst/stan/.")
+    stop("Model not found in inst/stan/. Please check model name.")
 
-  # ---------------------------------------------------------------------
-  # BACKEND 1: CmdStanR (compile Stan model and run)
-  # ---------------------------------------------------------------------
+  # -------------------------------------------------------------------------
+  # 3. Interactive parameter compatibility checks
+  # -------------------------------------------------------------------------
+  params <- sim$params
+
+  # Case 1: measurement error missing
+  if (model %in% c("I&R.stan", "Trait_EIV.stan") && params$Vxe == 0) {
+    message(
+      "\nThe selected model (", model, ") estimates measurement error or variation in the partner trait (Vxe).",
+      "\nHowever, Vxe = 0 in your simulated data."
+    )
+    ans <- utils::menu(c("Yes", "No"),
+                       title = "Would you like to continue anyway?")
+    if (ans == 2) stop("Model fitting cancelled by user.")
+  }
+
+  # Case 2: responsiveness variance missing
+  if (model %in% c("I&R.stan", "Trait_RS.stan") && params$Vpsi == 0) {
+    message(
+      "\nThe selected model (", model, ") estimates individual variation in responsiveness (Vpsi).",
+      "\nHowever, Vpsi = 0 in your simulated data."
+    )
+    ans <- utils::menu(c("Yes", "No"),
+                       title = "Would you like to continue anyway?")
+    if (ans == 2) stop("Model fitting cancelled by user.")
+  }
+
+  # -------------------------------------------------------------------------
+  # 4. Automatic backend detection
+  # -------------------------------------------------------------------------
+  use_cmdstanr <- requireNamespace("cmdstanr", quietly = TRUE)
+
+  if (use_cmdstanr) {
+    if (is.null(cmdstanr::cmdstan_path()) || cmdstanr::cmdstan_path() == "") {
+      message("CmdStanR detected, but CmdStan not yet installed.")
+      message("You can install it by running: cmdstanr::install_cmdstan()")
+      use_cmdstanr <- FALSE
+    }
+  }
+
+  if (!use_cmdstanr) {
+    message("------------------------------------------------------------")
+    message("CmdStanR not detected or not configured.")
+    message("It is recommended to install CmdStanR for faster, parallel Bayesian sampling.")
+    message("To install, run: cmdstanr::install_cmdstan()")
+    message("")
+    ans <- utils::menu(c("Yes", "No"),
+                       title = "Continue with slower, sequential execution using precompiled models?")
+    if (ans == 2)
+      stop("Aborted. Please install CmdStanR first.")
+    backend <- "precompiled"
+    message("Running with precompiled backend.")
+  } else {
+    backend <- "cmdstanr"
+    message("Running with cmdstanr backend.")
+  }
+
+  # -------------------------------------------------------------------------
+  # 5. Define fitting functions
+  # -------------------------------------------------------------------------
   if (backend == "cmdstanr") {
-
-    if (!requireNamespace("cmdstanr", quietly = TRUE))
-      stop("The 'cmdstanr' package is required for backend = 'cmdstanr'. Install it first.")
-
-    if (is.null(cmdstanr::cmdstan_path()) || cmdstanr::cmdstan_path() == "")
-      stop("CmdStan is not configured. Run cmdstanr::install_cmdstan() once before use.")
-
     mod <- cmdstanr::cmdstan_model(model_path)
 
     fit_one <- function(dat, id) {
@@ -66,18 +137,11 @@ run_model <- function(sim,
       list(summary = fit$summary(), data_id = id)
     }
 
-    # ---------------------------------------------------------------------
-    # BACKEND 2: Precompiled executable (run binary directly)
-    # ---------------------------------------------------------------------
-  } else if (backend == "precompiled") {
-
-    message("Running precompiled Stan executable for model: ", model)
-
+  } else {
     fit_one <- function(dat, id) {
       standata_file <- tempfile(fileext = ".json")
       output_dir <- tempfile()
 
-      # Save data as JSON (CmdStan format)
       jsonlite::write_json(list(
         n_obs = dat$n_obs,
         n_ind = dat$n_ind,
@@ -87,7 +151,6 @@ run_model <- function(sim,
         z = dat$z
       ), path = standata_file, auto_unbox = TRUE)
 
-      # Run executable using system2
       system2(
         command = exe_path,
         args = c("sample",
@@ -95,11 +158,9 @@ run_model <- function(sim,
                  paste0("output file=", file.path(output_dir, paste0("output_", id, ".csv"))),
                  paste0("num_samples=", iter),
                  paste0("random seed=", seed + id)),
-        stdout = TRUE,
-        stderr = TRUE
+        stdout = TRUE, stderr = TRUE
       )
 
-      # Read CmdStan CSV output
       out_file <- file.path(output_dir, paste0("output_", id, ".csv"))
       if (!file.exists(out_file))
         stop("Stan executable did not produce output. Check model name and permissions.")
@@ -109,9 +170,9 @@ run_model <- function(sim,
     }
   }
 
-  # ---------------------------------------------------------------------
-  # Run all datasets sequentially (but support multiple cores)
-  # ---------------------------------------------------------------------
+  # -------------------------------------------------------------------------
+  # 6. Run datasets
+  # -------------------------------------------------------------------------
   if (!requireNamespace("future.apply", quietly = TRUE))
     stop("Please install 'future.apply' for parallel execution.")
 
@@ -119,11 +180,12 @@ run_model <- function(sim,
   on.exit(future::plan(future::sequential), add = TRUE)
 
   nsets <- length(sim$data)
-  message("Running ", nsets, " datasets using backend: ", backend)
+  message("Running ", nsets, " datasets on ", cores, " cores (backend: ", backend, ")...")
 
   results <- future.apply::future_lapply(seq_len(nsets),
                                          function(i) fit_one(sim$data[[i]], i),
                                          future.seed = TRUE)
 
+  message("All datasets finished.")
   structure(results, class = "socialSim_results")
 }
