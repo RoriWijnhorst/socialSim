@@ -25,13 +25,15 @@ run_model <- function(sim,
     "Trait_EIV.stan"
   )
   if (!requireNamespace("cmdstanr", quietly = TRUE)) {
-    message(
-      "The 'cmdstanr' package is required to run Stan models.\n",
-      "Install it using:\n",
-      "  install.packages('cmdstanr', repos = c('https://mc-stan.org/r-packages/', getOption('repos')))\n",
-      "Then run cmdstanr::install_cmdstan() once to complete setup."
+    stop("Package 'cmdstanr' must be installed. See ?cmdstanr::install_cmdstan for setup.")
+  }
+
+  if (is.null(cmdstanr::cmdstan_path()) || cmdstanr::cmdstan_path() == "") {
+    stop(
+      "CmdStan is not yet configured.\n",
+      "Please run cmdstanr::install_cmdstan() once, then restart R.\n",
+      "If the error persists, manually set the path using cmdstanr::set_cmdstan_path()."
     )
-    stop("cmdstanr not available.")
   }
 
   # 2. Handle missing or invalid input
