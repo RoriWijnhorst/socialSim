@@ -1,0 +1,37 @@
+Package: socialSim
+Type: Package
+Title: Simulate and Analyse Social Interaction Data
+Version: 0.1.0
+Authors@R: 
+    person(
+      given = "Rori Efrain",
+      family = "Wijnhorst",
+      email = "wijnhorst@gmail.com",
+      role = c("aut", "cre"),
+      comment = c(ORCID = "YOUR-ORCID-ID")
+    )
+Description: 
+    Tool to simulate and analyse datasets of social interactions 
+    between individuals using hierarchical Bayesian models implemented in Stan. 
+    The package includes functions to simulate social phenotypes with direct 
+    and indirect effects, fit alternative IGE models (e.g., impact-responsiveness, 
+    variance-partitioning, and trait-based models), and summarise model performance 
+    in terms of bias and dispersion.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends: 
+    R (>= 4.2)
+Imports: 
+    cmdstanr,
+    MASS,
+    stats,
+    future,
+    future.apply
+Suggests: 
+    devtools,
+    testthat,
+    rmarkdown
+Config/testthat/edition: 3
