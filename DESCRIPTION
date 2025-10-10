@@ -25,12 +25,12 @@ RoxygenNote: 7.3.2
 Depends: 
     R (>= 4.2)
 Imports: 
-    cmdstanr,
     MASS,
     stats,
     future,
     future.apply
 Suggests: 
+    cmdstanr,
     devtools,
     testthat,
     rmarkdown
