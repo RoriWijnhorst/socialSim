@@ -28,7 +28,9 @@ Imports:
     MASS,
     stats,
     future,
-    future.apply
+    future.apply,
+    jsonlite,
+    posterior
 Suggests: 
     cmdstanr,
     devtools,
