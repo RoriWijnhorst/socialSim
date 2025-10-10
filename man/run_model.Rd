@@ -4,18 +4,28 @@
 \alias{run_model}
 \title{Fit one of the available Stan models to simulated datasets}
 \usage{
-run_model(sim, model = NULL, iter = 1000, seed = 1234, cores)
+run_model(
+  sim,
+  model = "Trait_only.stan",
+  backend = c("cmdstanr", "precompiled"),
+  iter = 1000,
+  seed = 1234,
+  cores = 1
+)
 }
 \arguments{
 \item{sim}{Output from \code{simulate_data()}.}
 
-\item{model}{Name of the Stan model to use (choose from the 5 available options).}
+\item{model}{Name of the Stan model to use (choose from the available options).}
 
-\item{iter}{Number of iterations per chain (default = 1000).}
+\item{backend}{Either "cmdstanr" (default) to compile Stan code, or
+"precompiled" to run an existing executable in inst/stan/.}
+
+\item{iter}{Number of iterations per chain.}
 
 \item{seed}{Random seed for reproducibility.}
 
-\item{cores}{Number of CPU cores to use (required).}
+\item{cores}{Number of CPU cores (chains are run sequentially if backend = "precompiled").}
 }
 \value{
 A list of fitted model summaries, one per dataset.
