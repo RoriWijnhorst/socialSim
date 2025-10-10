@@ -5,6 +5,11 @@
 
 **Simulate and Analyse Social Interaction Models**
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/RoriWijnhorst/socialSim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/RoriWijnhorst/socialSim/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 The **socialSim R package** provides tools to simulate and analyse
 datasets of social interactions between individuals using hierarchical
 Bayesian models implemented in Stan.
@@ -60,11 +65,11 @@ print(summary)
 
 ## 🧪 Available IGE models
 
-| Model name      | Description                                                 |
-|-----------------|-------------------------------------------------------------|
-| I&R.stan        | Full impact–responsiveness model                            |
-| VP.stan         | Variance-partitioning model                                 |
-| Trait.stan      | Trait-based model with residual partner effects             |
-| Trait_only.stan | Simple trait-based model without residual partner effects   |
-| Trait_RS.stan   | Random-slope trait model with residual partner effects      |
-| Trait_EIV.stan  | Errors-in-variable trait model with residual partner effect |
+| Model name      | Description                                                  |
+|-----------------|--------------------------------------------------------------|
+| I&R.stan        | Full impact–responsiveness model                             |
+| VP.stan         | Variance-partitioning model                                  |
+| Trait.stan      | Trait-based model with residual partner effects              |
+| Trait_only.stan | Simple trait-based model without residual partner effects    |
+| Trait_RS.stan   | Random-slope trait model with residual partner effects       |
+| Trait_EIV.stan  | Errors-in-variable trait model with residual partner effects |
