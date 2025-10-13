@@ -10,7 +10,7 @@
 #' @export
 run_model <- function(sim,
                       model = NULL,
-                      iter = 1000,
+                      iter = 2000,
                       seed = 1234,
                       cores = 1) {
 
