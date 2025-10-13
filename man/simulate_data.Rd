@@ -63,7 +63,8 @@ simulate_data(
 
 \item{r_epsilon_x}{Corr(epsilon, x).}
 
-\item{fix_total_var}{Logical; if TRUE (default), residual variance is adjusted so total phenotypic variance ≈ 1.}
+\item{fix_total_var}{Logical; if TRUE (default), residual variance is
+adjusted so total phenotypic variance is approx. 1.}
 }
 \value{
 A list with:
@@ -74,6 +75,10 @@ A list with:
 }
 }
 \description{
-Generates multiple datasets under a random balanced design, returning both
-the simulated data and the parameter settings used (for reproducibility).
+This function generates datasets where individual phenotypes are influenced
+by both direct and indirect (social) effects, under a specified sampling design.
+}
+\examples{
+sim <- simulate_data(ind =1200, partners = 4, iterations = 100, B_0 = 1, Valpha=0.2, Vepsilon = 0.1)
+
 }

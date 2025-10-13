@@ -46,17 +46,19 @@ library(socialSim)
 
 # 1. Simulate data
 sim <- simulate_data(
-  ind =1200,
-  partners = 4,
-  iterations = 100,     # number of datasets created    
+  ind = 1200,           # number of unique focal individuals
+  partners = 4,         # number of social partners per individual
+  repeats = 1,          # number of repeats of dyads   
+  iterations = 10,      # number of datasets created    
   B_0 = 1,              # population intercept
   psi = 0.3,            # population-level response
   Valpha = 0.2,         # variance in direct effects
   Vepsilon = 0.1        # variance in residual partner effects
 )
 
-# 2. Fit a Stan model
-res <- run_model(sim, model = "Trait.stan", iter=5000, cores = 6)
+# 2. Fit a Stan model. For the analyses, cmdstanr or rstan needs to be installed.
+# using cmdstanr will be faster, since it runs model in parallel on different cores of your PC.
+res <- run_model(sim, model = "Trait.stan", iter=2000, cores = 6)
 
 # 3. Summarise results
 summary <- summarise_results(res)

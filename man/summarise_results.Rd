@@ -15,3 +15,10 @@ Data frame with only parameters that were estimated in the Stan model.
 \description{
 Summarise bias and dispersion (MADm) across simulated fits
 }
+\examples{
+\dontrun{
+sim <- simulate_data(ind = 10, partners = 2, repeats = 1, iterations = 1)
+res <- run_model(sim, model = "Trait.stan", iter = 100, cores = 2)
+summary <- summarise_results(res)
+}
+}

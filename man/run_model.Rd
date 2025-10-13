@@ -23,3 +23,9 @@ A list of fitted model summaries, one per dataset.
 \description{
 Fit one of the available Stan models to simulated datasets
 }
+\examples{
+\dontrun{
+sim <- simulate_data(B_0 = 1, Valpha=0.2, Vepsilon = 0.1)
+res <- run_model(sim, model = "VP.stan", iter=2000, cores = 6)
+}
+}

@@ -5,7 +5,11 @@
 #' @param iter Number of iterations per chain (default = 1000).
 #' @param seed Random seed for reproducibility.
 #' @param cores Number of CPU cores (used if cmdstanr or rstan is available).
-#'
+#' @examples
+#' \dontrun{
+#' sim <- simulate_data(B_0 = 1, Valpha=0.2, Vepsilon = 0.1)
+#' res <- run_model(sim, model = "VP.stan", iter=2000, cores = 6)
+#' }
 #' @return A list of fitted model summaries, one per dataset.
 #' @export
 run_model <- function(sim,
