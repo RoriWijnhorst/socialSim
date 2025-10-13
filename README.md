@@ -16,10 +16,13 @@ Bayesian models implemented in Stan.
 
 It enables users to generate realistic social interaction data, where
 individual phenotypes influence and respond to those of their partners.
-The simulation framework allows control over variation in **mean trait
-values, social responsiveness, and social impact**, making it suitable
+You can simulate a sampling design by adjusting the **number of
+individuals, partners, and repeated dyads**. The simulation framework
+allows control over variation in **mean trait values, social
+responsiveness, and social impact** and correlation, making it suitable
 for research on **direct and indirect genetic effects (DGEs and IGEs)**
-and **interacting phenotypes**.
+and **interacting phenotypes**. See `?simulate_data` for a full list of
+adjustable parameters.
 
 The package also provides analysis functions to evaluate model
 performance in terms of bias and dispersion, using both established and
@@ -44,7 +47,7 @@ library(socialSim)
 ``` r
 library(socialSim)
 
-# 1. Simulate data
+# 1. Simulate data. See ?simulate_data for all adjustable parameters
 sim <- simulate_data(
   ind = 1200,           # number of unique focal individuals
   partners = 4,         # number of social partners per individual
