@@ -44,7 +44,7 @@ sim <- simulate_data(
 ```
 
 This creates a list of datasets representing repeated social interactions.  
-You can control variance components and correlations between direct, indirect, and residual effects.
+You can control study design components, variance components and correlations between direct and indirect effect.
 
 ---
 
