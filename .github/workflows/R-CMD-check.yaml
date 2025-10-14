@@ -11,7 +11,6 @@ permissions: read-all
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
-
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
     strategy:
@@ -27,7 +26,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      _R_CHECK_FORCE_SUGGESTS_: false  # don't fail if Suggests (e.g. cmdstanr/rstan) are missing
+      _R_CHECK_FORCE_SUGGESTS_: false  # do not fail if cmdstanr or rstan are missing
 
     steps:
       - uses: actions/checkout@v4
@@ -40,14 +39,14 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      # Install only hard deps; also install rcmdcheck explicitly
+      # Install only hard dependencies (Imports/Depends/LinkingTo)
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          dependencies: "hard"         # Imports/Depends/LinkingTo ONLY
+          dependencies: hard
           extra-packages: any::rcmdcheck
           needs: check
 
-      # Run R CMD check; skip vignettes and manual to avoid rmarkdown/LaTeX issues
+      # Run R CMD check
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
