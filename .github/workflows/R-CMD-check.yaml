@@ -21,20 +21,20 @@ jobs:
         with:
           use-public-rspm: true
 
-      # Install system dependencies for packages like rgl
       - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y libpng-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev
+        run: sudo apt-get update && sudo apt-get install -y libpng-dev libgl1-mesa-dev libglu1-mesa-dev
 
-      # Install everything needed
-      - name: Install and check
+      - name: Install R dependencies
         run: |
-          Rscript -e 'cat("Running on R version:", R.version.string, "\n");
-          options(repos = c(CRAN="https://cran.rstudio.com"));
-          install.packages(c(
-            "rcmdcheck", "MASS", "stats", "future", "future.apply",
+          Rscript -e 'install.packages(c(
+            "rcmdcheck",
+            "MASS", "stats", "future", "future.apply",
             "testthat", "rmarkdown", "knitr"
-          ), dependencies = TRUE);
-          rcmdcheck::rcmdcheck(
+          ), repos = "https://cran.rstudio.com")'
+
+      - name: Run R CMD check
+        run: |
+          Rscript -e 'rcmdcheck::rcmdcheck(
             args = c("--no-manual", "--as-cran"),
             build_args = c("--no-build-vignettes", "--no-manual"),
             error_on = "warning"
