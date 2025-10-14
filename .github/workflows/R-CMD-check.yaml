@@ -21,20 +21,13 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: Install rcmdcheck
-        run: |
-          Rscript -e 'install.packages("rcmdcheck", repos = "https://cran.rstudio.com")'
-
-      - name: Install dependencies
+      - name: Install and check
         run: |
           Rscript -e 'install.packages(c(
-            "MASS", "stats", "future", "future.apply",
+            "rcmdcheck", "MASS", "stats", "future", "future.apply",
             "devtools", "testthat", "rmarkdown", "knitr"
-          ), repos = "https://cran.rstudio.com")'
-
-      - name: Run R CMD check
-        run: |
-          Rscript -e 'rcmdcheck::rcmdcheck(
+          ), repos = "https://cran.rstudio.com");
+          rcmdcheck::rcmdcheck(
             args = c("--no-manual", "--as-cran"),
             build_args = c("--no-build-vignettes", "--no-manual"),
             error_on = "warning"
