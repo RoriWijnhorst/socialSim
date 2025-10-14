@@ -23,12 +23,15 @@ jobs:
 
       - name: Install and check
         run: |
-          Rscript -e 'install.packages(c(
+          Rscript -e 'cat("Running on R version:", R.version.string, "\n");
+          options(repos = c(CRAN="https://cran.rstudio.com"));
+          install.packages(c(
             "rcmdcheck", "MASS", "stats", "future", "future.apply",
-            "devtools", "testthat", "rmarkdown", "knitr"
-          ), repos = "https://cran.rstudio.com");
+            "testthat", "rmarkdown", "knitr"
+          ), dependencies = TRUE);
           rcmdcheck::rcmdcheck(
             args = c("--no-manual", "--as-cran"),
             build_args = c("--no-build-vignettes", "--no-manual"),
             error_on = "warning"
           )'
+
