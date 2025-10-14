@@ -31,8 +31,8 @@ jobs:
             "testthat", "rmarkdown", "knitr"
           ), repos = "https://cran.rstudio.com")'
 
-- name: Build and check (skip vignettes)
-  run: |
+      - name: Build and check (skip vignettes)
+        run: |
     R CMD build . --no-build-vignettes
     PKG_TARBALL=$(ls -1t *.tar.gz | head -n 1)
     R CMD check "${PKG_TARBALL}" --no-manual --as-cran --no-vignettes
