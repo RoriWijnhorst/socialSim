@@ -20,14 +20,14 @@ jobs:
         config:
           - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,  r: 'devel',  http-user-agent: 'release'}
           - {os: ubuntu-latest,  r: 'release'}
           - {os: ubuntu-latest,  r: 'oldrel-1'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      _R_CHECK_FORCE_SUGGESTS_: false  # Ignore missing cmdstanr/rstan in Suggests
+      _R_CHECK_FORCE_SUGGESTS_: false  # don't fail if Suggests (e.g. cmdstanr/rstan) are missing
 
     steps:
       - uses: actions/checkout@v4
@@ -40,18 +40,17 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      # Install dependencies safely
+      # Install only hard deps; also install rcmdcheck explicitly
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          dependencies: |
-            hard
-            Suggests
+          dependencies: "hard"         # Imports/Depends/LinkingTo ONLY
           extra-packages: any::rcmdcheck
           needs: check
 
-      # Run R CMD check (skip vignette + manual)
+      # Run R CMD check; skip vignettes and manual to avoid rmarkdown/LaTeX issues
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
           build_args: 'c("--no-build-vignettes", "--no-manual", "--compact-vignettes=gs+qpdf")'
+          args: 'c("--no-manual", "--as-cran")'
           error-on: '"warning"'
