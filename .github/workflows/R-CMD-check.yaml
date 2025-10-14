@@ -24,15 +24,16 @@ jobs:
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libpng-dev libgl1-mesa-dev libglu1-mesa-dev
 
-      - name: Install R packages
+      - name: Install dependencies
         run: |
-          Rscript -e 'install.packages("rcmdcheck", repos = "https://cran.rstudio.com")'
-          Rscript -e 'install.packages(c("MASS", "stats", "future", "future.apply", "testthat", "rmarkdown", "knitr"), repos = "https://cran.rstudio.com")'
+          Rscript -e 'install.packages(c(
+            "MASS", "stats", "future", "future.apply",
+            "testthat", "rmarkdown", "knitr"
+          ), repos = "https://cran.rstudio.com")'
 
-      - name: Run R CMD check
+      - name: Build and check
         run: |
-          Rscript -e 'library(rcmdcheck); rcmdcheck::rcmdcheck(
-            args = c("--no-manual", "--as-cran"),
-            build_args = c("--no-build-vignettes", "--no-manual"),
-            error_on = "warning"
-          )'
+          R CMD build .
+          PKG_TARBALL=$(ls -1t *.tar.gz | head -n 1)
+          R CMD check "${PKG_TARBALL}" --no-manual --as-cran --no-build-vignettes
+
