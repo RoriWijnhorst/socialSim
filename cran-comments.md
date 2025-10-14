@@ -10,6 +10,13 @@ These are not related to package code and will not occur on CRAN servers, where 
 
 There were no issues with examples, tests, or package dependencies.
 
+## CRAN reviewer comments
+"Suggests or Enhances not in mainstream repositories:
+     cmdstanr
+but no declaration where to get it from?"
+
+The package optionally uses the GitHub package cmdstanr (Stan Development Team), which is listed under Suggests and GitHub repo specificied under Remotes: stan-dev/cmdstanr. Functions run without it, and examples and tests skip when cmdstanr is not available. 
+
 ## Comments
 This is the initial CRAN release of the **socialSim** package.
 It provides tools to simulate and analyse social interaction data using hierarchical Bayesian models implemented in Stan.
