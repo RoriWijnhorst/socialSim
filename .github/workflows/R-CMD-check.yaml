@@ -24,20 +24,19 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      # 🚀 Install dependencies manually instead of using pak
+      # ✅ Install dependencies via Rscript
       - name: Install dependencies
         run: |
-          install.packages(c(
+          Rscript -e 'install.packages(c(
             "MASS", "stats", "future", "future.apply",
-            "rstan", "devtools", "testthat", "rmarkdown", "knitr", "rcmdcheck"
-          ), repos = "https://cran.rstudio.com")
+            "devtools", "testthat", "rmarkdown", "knitr", "rcmdcheck"
+          ), repos = "https://cran.rstudio.com")'
 
-      # 🚀 Run R CMD check
+      # ✅ Run R CMD check
       - name: Run R CMD check
         run: |
-          rcmdcheck::rcmdcheck(
+          Rscript -e 'rcmdcheck::rcmdcheck(
             args = c("--no-manual", "--as-cran"),
             build_args = c("--no-build-vignettes", "--no-manual"),
             error_on = "warning"
-          )
-
+          )'
