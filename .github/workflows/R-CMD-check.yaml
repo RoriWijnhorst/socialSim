@@ -1,4 +1,3 @@
-# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 on:
   push:
     branches: [main, master]
@@ -26,7 +25,8 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      _R_CHECK_FORCE_SUGGESTS_: false  # do not fail if cmdstanr or rstan are missing
+      _R_CHECK_FORCE_SUGGESTS_: false  # don't fail if cmdstanr/rstan not available
+      NOT_CRAN: true                   # skip CRAN-specific checks
 
     steps:
       - uses: actions/checkout@v4
@@ -39,14 +39,14 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      # Install only hard dependencies (Imports/Depends/LinkingTo)
+      # Install dependencies
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          dependencies: hard
+          dependencies: all
           extra-packages: any::rcmdcheck
           needs: check
 
-      # Run R CMD check
+      # Run R CMD check without vignettes or manual
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
