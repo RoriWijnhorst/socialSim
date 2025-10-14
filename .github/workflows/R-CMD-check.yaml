@@ -27,7 +27,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      _R_CHECK_FORCE_SUGGESTS_: false  # prevents errors if cmdstanr/rstan aren't available
+      _R_CHECK_FORCE_SUGGESTS_: false  # Ignore missing cmdstanr/rstan in Suggests
 
     steps:
       - uses: actions/checkout@v4
@@ -40,14 +40,16 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      # Install dependencies (Imports + Suggests, including cmdstanr safely)
+      # Install dependencies safely
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          dependencies: '"hard, suggests"'
+          dependencies: |
+            hard
+            Suggests
           extra-packages: any::rcmdcheck
           needs: check
 
-      # Run R CMD check, skipping vignette/manual building to avoid LaTeX & rmarkdown issues
+      # Run R CMD check (skip vignette + manual)
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
