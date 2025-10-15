@@ -73,42 +73,35 @@ run_model <- function(sim,
   }
 
   # -------------------------------------------------------------------------
-  # 3. Backend detection: cmdstanr → rstan
+  # 3. Detect backend: prefer cmdstanr → fallback to rstan
   # -------------------------------------------------------------------------
   backend <- NULL
-
   if (requireNamespace("cmdstanr", quietly = TRUE)) {
     path_ok <- tryCatch(cmdstanr::cmdstan_path(), error = function(e) "")
     if (nzchar(path_ok)) backend <- "cmdstanr"
   }
-
   if (is.null(backend) && requireNamespace("rstan", quietly = TRUE))
     backend <- "rstan"
 
-  # If no backend found → stop with informative message
   if (is.null(backend)) {
     stop(
-      "\nNo Stan backend detected (CmdStanR or rstan not installed).\n",
-      "The 'socialSim' package requires one of these to fit Bayesian models.\n\n",
-      "To install CmdStanR (recommended):\n",
-      "  install.packages('cmdstanr', repos = c('https://mc-stan.org/r-packages/', getOption('repos')))\n",
-      "  cmdstanr::install_cmdstan()\n\n",
-      "Or install rstan:\n",
-      "  install.packages('rstan', repos = 'https://cloud.r-project.org')\n"
+      "No Stan backend detected (CmdStanR or rstan not installed).\n",
+      "Install one of these:\n",
+      "  - CmdStanR (recommended): install.packages('cmdstanr', ",
+      "repos = c('https://stan-dev.r-universe.dev', getOption('repos')))\n",
+      "  - rstan: install.packages('rstan', repos = 'https://cloud.r-project.org')"
     )
   }
 
   message("Detected backend: ", backend)
 
   # -------------------------------------------------------------------------
-  # 4. Fit functions
+  # 4. Compile model once (outside workers)
   # -------------------------------------------------------------------------
-
   if (backend == "cmdstanr") {
-    # Try to compile or recompile model if invalid
     mod <- try(cmdstanr::cmdstan_model(model_path, quiet = TRUE), silent = TRUE)
     if (inherits(mod, "try-error")) {
-      message("Recompiling model: ", model)
+      message("Recompiling CmdStan model: ", model)
       mod <- cmdstanr::cmdstan_model(model_path, force_recompile = TRUE, quiet = TRUE)
     }
 
@@ -121,7 +114,6 @@ run_model <- function(sim,
         xj = dat$xj,
         z = dat$z
       )
-
       fit <- mod$sample(
         data = standata,
         iter_sampling = iter,
@@ -131,13 +123,12 @@ run_model <- function(sim,
         seed = seed + id,
         refresh = 0
       )
-
       list(summary = fit$summary(), data_id = id)
     }
 
   } else if (backend == "rstan") {
-
     message("Running with rstan backend (compiling model)...")
+    rstan::rstan_options(auto_write = TRUE)
     mod <- rstan::stan_model(model_path)
 
     fit_one <- function(dat, id) {
@@ -149,33 +140,36 @@ run_model <- function(sim,
         xj = dat$xj,
         z = dat$z
       )
-
-      fit <- rstan::sampling(mod,
-                             data = standata,
-                             iter = iter,
-                             chains = 1,
-                             seed = seed + id,
-                             refresh = 0)
+      fit <- rstan::sampling(
+        object = mod,
+        data = standata,
+        iter = iter,
+        chains = 1,
+        seed = seed + id,
+        refresh = 0
+      )
       list(summary = rstan::summary(fit)$summary, data_id = id)
     }
   }
 
   # -------------------------------------------------------------------------
-  # 5. Parallel execution
+  # 5. Parallel execution across datasets
   # -------------------------------------------------------------------------
   if (!requireNamespace("future.apply", quietly = TRUE))
     stop("Please install 'future.apply' for parallel execution.")
 
-  future::plan(future::multisession, workers = cores)
-  on.exit(future::plan(future::sequential), add = TRUE)
+  message("Running ", length(sim$data), " datasets on ", cores,
+          " cores (backend: ", backend, ")...")
 
-  nsets <- length(sim$data)
-  message("Running ", nsets, " datasets on ", cores, " cores (backend: ", backend, ")...")
+  old_plan <- future::plan()
+  on.exit(future::plan(old_plan), add = TRUE)
+  future::plan(future::multisession, workers = cores)
 
   results <- future.apply::future_lapply(
-    seq_len(nsets),
+    seq_along(sim$data),
     function(i) fit_one(sim$data[[i]], i),
-    future.seed = TRUE
+    future.seed = TRUE,
+    future.globals = list(mod = mod)  # share compiled model
   )
 
   message("All datasets finished.")
