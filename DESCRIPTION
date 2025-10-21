@@ -1,7 +1,7 @@
 Package: socialSim
 Type: Package
 Title: Simulate and Analyse Social Interaction Data
-Version: 0.1.3
+Version: 0.1.4
 Authors@R: 
     person(
       given = "Rori Efrain",
@@ -23,7 +23,10 @@ Description:
     interacting phenotypes and on direct and indirect genetic effects ('DGEs' and 'IGEs'). 
     The package also includes functions to fit and compare alternative models of social 
     effects, including impact–responsiveness, variance–partitioning, and trait-based 
-    models, and to summarise model performance in terms of bias and dispersion.
+    models, and to summarise model performance in terms of bias and dispersion. For more 
+    details on the study of social interactions and impact-responsiveness,
+    see Moore et al. (1997) <doi:10.1111/j.1558-5646.1997.tb01458.x> and 
+    de Groot et al. (2022) <doi:10.1016/j.neubiorev.2022.104996>
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-GB

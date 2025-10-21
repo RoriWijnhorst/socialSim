@@ -2,9 +2,9 @@
 #'
 #' @param results Output from \code{run_model()}.
 #' @examples
-#' \dontrun{
-#' sim <- simulate_data(ind = 10, partners = 2, repeats = 1, iterations = 1)
-#' res <- run_model(sim, model = "Trait.stan", iter = 100, cores = 2)
+#' \donttest{
+#' sim <- simulate_data(ind = 100, Valpha=0.2, Vepsilon = 0.1, iterations=2)
+#' res <- run_model(sim, model = "Trait.stan", iter = 500, cores = 2)
 #' summary <- summarise_results(res)
 #' }
 #' @return Data frame with only parameters that were estimated in the Stan model.
