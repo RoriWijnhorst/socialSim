@@ -1,7 +1,7 @@
 Package: socialSim
 Type: Package
 Title: Simulate and Analyse Social Interaction Data
-Version: 0.1.4
+Version: 0.1.5
 Authors@R: 
     person(
       given = "Rori Efrain",
@@ -10,7 +10,8 @@ Authors@R:
       role = c("aut", "cre"),
       comment = c(ORCID = "0000-0002-8902-592X")
     )
-Description:  Provides tools to simulate and analyse datasets of social interactions 
+Description:  
+    Provides tools to simulate and analyse datasets of social interactions 
     between individuals using hierarchical Bayesian models implemented in Stan. 
     The package interacts with Stan via 'cmdstanr' (available from 
     <https://mc-stan.org/r-packages/>) or 'rstan', depending on user setup. 
