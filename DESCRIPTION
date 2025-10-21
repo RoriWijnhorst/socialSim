@@ -10,8 +10,7 @@ Authors@R:
       role = c("aut", "cre"),
       comment = c(ORCID = "0000-0002-8902-592X")
     )
-Description: 
-    Provides tools to simulate and analyse datasets of social interactions 
+Description:  Provides tools to simulate and analyse datasets of social interactions 
     between individuals using hierarchical Bayesian models implemented in Stan. 
     The package interacts with Stan via 'cmdstanr' (available from 
     <https://mc-stan.org/r-packages/>) or 'rstan', depending on user setup. 
@@ -26,7 +25,7 @@ Description:
     models, and to summarise model performance in terms of bias and dispersion. For more 
     details on the study of social interactions and impact-responsiveness,
     see Moore et al. (1997) <doi:10.1111/j.1558-5646.1997.tb01458.x> and 
-    de Groot et al. (2022) <doi:10.1016/j.neubiorev.2022.104996>
+    de Groot et al. (2022) <doi:10.1016/j.neubiorev.2022.104996>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-GB
