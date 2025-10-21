@@ -39,9 +39,9 @@ Imports:
     MASS,
     stats,
     future,
-    future.apply
+    future.apply,
+    rstan
 Suggests: 
-    rstan,
     cmdstanr,
     devtools,
     testthat,
