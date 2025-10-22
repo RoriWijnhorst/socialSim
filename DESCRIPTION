@@ -41,7 +41,7 @@ Imports:
     future,
     future.apply,
 Suggests:
-    rstan
+    rstan,
     cmdstanr,
     devtools,
     testthat,
