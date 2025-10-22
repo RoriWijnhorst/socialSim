@@ -40,8 +40,8 @@ Imports:
     stats,
     future,
     future.apply,
+Suggests:
     rstan
-Suggests: 
     cmdstanr,
     devtools,
     testthat,
