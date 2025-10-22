@@ -7,8 +7,14 @@
 #' @param cores Number of CPU cores (used if cmdstanr or rstan is available).
 #' @examples
 #' \dontrun{
+#' if (requireNamespace("cmdstanr", quietly = TRUE) ||
+#'     requireNamespace("rstan", quietly = TRUE)) {
 #'   sim <- simulate_data(ind = 100, Valpha = 0.2, Vepsilon = 0.1, iterations = 2)
 #'   res <- run_model(sim, model = "Trait.stan", iter = 500, cores = 2)
+#'   summary(res)
+#' } else {
+#'   message("CmdStanR or rstan not available; example skipped.")
+#' }
 #' }
 #' @return A list of fitted model summaries, one per dataset.
 #' @export
