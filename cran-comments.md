@@ -12,12 +12,12 @@ The remaining NOTEs are expected and not related to package functionality:
   `Additional_repositories: https://stan-dev.r-universe.dev`.
 
 ## Changes following CRAN reviewer comments
-- Added method references in the Description field (Moore et al. 1997, De Groot et al. 2022).  
-- Replaced all `\dontrun{}` examples with `\donttest{}`.  
-- Updated Description to begin with a full sentence and ensure proper formatting.  
-- Confirmed that all examples conditionally skip if neither `cmdstanr` nor `rstan` are installed.  
+- Added method references in the Description field (Moore et al. 1997, De Groot et al. 2022).   
+- Kept example wrappers as `\dontrun{}` because the examples require additional software (Stan backends via **cmdstanr** or **rstan**) that is not available on CRAN test machines.  
+  These examples run successfully when the required backends are installed locally.  
 
 ## Comments
 This is the initial CRAN release of **socialSim**.  
 The package provides tools to simulate and analyse datasets of social interactions between individuals using hierarchical Bayesian models implemented in Stan.  
 It is designed for research on interacting phenotypes and on direct and indirect genetic effects (DGEs and IGEs).
+
