@@ -24,8 +24,8 @@ A list of fitted model summaries, one per dataset.
 Fit one of the available Stan models to simulated datasets
 }
 \examples{
-\donttest{
-sim <- simulate_data(B_0 = 1, Valpha=0.2, Vepsilon = 0.1)
-res <- run_model(sim, model = "VP.stan", iter=2000, cores = 2)
+\dontrun{
+  sim <- simulate_data(ind = 100, Valpha = 0.2, Vepsilon = 0.1, iterations = 2)
+  res <- run_model(sim, model = "Trait.stan", iter = 500, cores = 2)
 }
 }
