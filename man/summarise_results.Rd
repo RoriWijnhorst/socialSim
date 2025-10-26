@@ -16,7 +16,7 @@ Data frame with only parameters that were estimated in the Stan model.
 Summarise bias and dispersion (MADm) across simulated fits
 }
 \examples{
-\dontrun{
+\donttest{
 if (requireNamespace("cmdstanr", quietly = TRUE) ||
     requireNamespace("rstan", quietly = TRUE)) {
   sim <- simulate_data(ind = 100, Valpha = 0.2, Vepsilon = 0.1, iterations = 2)

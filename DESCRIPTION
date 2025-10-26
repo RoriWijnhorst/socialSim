@@ -1,7 +1,7 @@
 Package: socialSim
 Type: Package
 Title: Simulate and Analyse Social Interaction Data
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: 
     person(
       given = "Rori Efrain",

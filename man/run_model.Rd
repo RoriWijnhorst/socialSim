@@ -24,7 +24,7 @@ A list of fitted model summaries, one per dataset.
 Fit one of the available Stan models to simulated datasets
 }
 \examples{
-\dontrun{
+\donttest{
 if (requireNamespace("cmdstanr", quietly = TRUE) ||
     requireNamespace("rstan", quietly = TRUE)) {
   sim <- simulate_data(ind = 100, Valpha = 0.2, Vepsilon = 0.1, iterations = 2)

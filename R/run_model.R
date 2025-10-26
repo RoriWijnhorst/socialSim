@@ -6,7 +6,7 @@
 #' @param seed Random seed for reproducibility.
 #' @param cores Number of CPU cores (used if cmdstanr or rstan is available).
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' if (requireNamespace("cmdstanr", quietly = TRUE) ||
 #'     requireNamespace("rstan", quietly = TRUE)) {
 #'   sim <- simulate_data(ind = 100, Valpha = 0.2, Vepsilon = 0.1, iterations = 2)
