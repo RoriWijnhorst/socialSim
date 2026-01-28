@@ -39,7 +39,7 @@ library(socialSim)
 
 # 1. Simulate data. See ?simulate_data for all adjustable parameters
 sim <- simulate_data(
-  ind = 1200,           # number of unique focal individuals
+  ind = 400,            # number of unique focal individuals
   partners = 4,         # number of social partners per individual
   repeats = 1,          # number of repeats of dyads   
   iterations = 10,      # number of datasets created    

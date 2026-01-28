@@ -129,7 +129,7 @@ run_model <- function(sim,
         seed = seed + id,
         refresh = 0
       )
-      list(summary = fit$summary(), data_id = id)
+      list(summary = fit$summary(), params=params, data_id = id)
     }
 
   } else if (backend == "rstan") {
@@ -154,7 +154,7 @@ run_model <- function(sim,
         seed = seed + id,
         refresh = 0
       )
-      list(summary = rstan::summary(fit)$summary, data_id = id)
+      list(summary = rstan::summary(fit)$summary, params=params, data_id = id)
     }
   }
 

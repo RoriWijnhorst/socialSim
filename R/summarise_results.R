@@ -52,8 +52,8 @@ summarise_results <- function(results) {
     summ <- results[[i]]$summary
     for (p in seq_along(par_names)) {
       stan_var <- unname(map[par_names[p]])
-      row <- summ[summ$variable == stan_var, , drop = FALSE]
-      est_mat[i, p] <- if (nrow(row)) row$mean[1] else NA_real_
+      row <- summ[rownames(summ) == stan_var, , drop = FALSE]
+      est_mat[i, p] <- if (nrow(row)) row[1, "mean"] else NA_real_
     }
   }
 
