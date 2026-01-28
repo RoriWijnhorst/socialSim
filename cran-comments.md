@@ -9,5 +9,6 @@
 - Fixed a bug in the internal result summary function (`summarise_results()`) that affected extraction of posterior means from Stan summary matrices. This change improves robustness and does not affect the user-facing API.
 
 ## Comments
+Maintenance update to the **socialSim** package.
 The **socialSim** package provides tools to simulate and analyse datasets of social interactions between individuals using hierarchical Bayesian models implemented in Stan. It is designed for research on interacting phenotypes and on direct and indirect genetic effects (DGEs and IGEs).
 
