@@ -24,8 +24,8 @@ Description:
     The package also includes functions to fit and compare alternative models of social 
     effects, including impact–responsiveness, variance–partitioning, and trait-based 
     models, and to summarise model performance in terms of bias and dispersion. For more 
-    detailed description of the available models and impact-responsiveness, see preprint 
-    Wijnhorst et al. (2025) <doi:10.32942/X2F65M>.
+    detailed description of the available models and impact-responsiveness, see
+    accompanying preprint Wijnhorst et al. (2025) <doi:10.32942/X2F65M>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-GB

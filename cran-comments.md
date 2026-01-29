@@ -4,7 +4,7 @@
 * devtools::check() and R CMD check --as-cran passed with 0 ERRORs, 0 WARNINGs, and 0 NOTEs  
 
 ## Changes since the previous CRAN release
-- Added methodological reference to the preprint to the Description field (Wijnhorst et al. 2025.).
+- Added accompanying preprint reference to the Description field (Wijnhorst et al. 2025.).
 - Wrapped long-running examples in `\donttest{}` because they require 'rstan' and will take longer than 5 seconds to run on CRAN machines.
 - Fixed a bug in the internal result summary function (`summarise_results()`) that affected extraction of posterior means from Stan summary matrices. This change improves robustness and does not affect the user-facing API.
 
