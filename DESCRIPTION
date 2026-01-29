@@ -41,7 +41,6 @@ Imports:
     future.apply,
 Suggests:
     rstan,
-    cmdstanr,
     devtools,
     testthat,
     rmarkdown,

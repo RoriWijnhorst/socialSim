@@ -7,13 +7,12 @@
 #' @param cores Number of CPU cores (used if cmdstanr or rstan is available).
 #' @examples
 #' \donttest{
-#' if (requireNamespace("cmdstanr", quietly = TRUE) ||
-#'     requireNamespace("rstan", quietly = TRUE)) {
+#' if (requireNamespace("rstan", quietly = TRUE)) {
 #'   sim <- simulate_data(ind = 100, Valpha = 0.2, Vepsilon = 0.1, iterations = 1)
 #'   res <- run_model(sim, model = "Trait.stan", iter = 200, cores = 1)
 #'   summary(res)
 #' } else {
-#'   message("CmdStanR or rstan not available; example skipped.")
+#'   message(" rstan not available; example skipped.")
 #' }
 #' }
 #' @return A list of fitted model summaries, one per dataset.
@@ -79,84 +78,48 @@ run_model <- function(sim,
   }
 
   # -------------------------------------------------------------------------
-  # 3. Detect backend: prefer cmdstanr → fallback to rstan
+  # 3. Detect backend: rstan only
   # -------------------------------------------------------------------------
-  backend <- NULL
-  if (requireNamespace("cmdstanr", quietly = TRUE)) {
-    path_ok <- tryCatch(cmdstanr::cmdstan_path(), error = function(e) "")
-    if (nzchar(path_ok)) backend <- "cmdstanr"
-  }
-  if (is.null(backend) && requireNamespace("rstan", quietly = TRUE))
-    backend <- "rstan"
-
-  if (is.null(backend)) {
+  if (!requireNamespace("rstan", quietly = TRUE)) {
     stop(
-      "No Stan backend detected (CmdStanR or rstan not installed).\n",
-      "Install one of these:\n",
-      "  - CmdStanR (recommended): install.packages('cmdstanr', ",
-      "repos = c('https://stan-dev.r-universe.dev', getOption('repos')))\n",
-      "  - rstan: install.packages('rstan', repos = 'https://cloud.r-project.org')"
+      "The 'rstan' package is required but not installed.\n",
+      "Please install it with:\n",
+      "  install.packages('rstan', repos = 'https://cloud.r-project.org')"
     )
   }
 
-  message("Detected backend: ", backend)
 
   # -------------------------------------------------------------------------
   # 4. Compile model once (outside workers)
   # -------------------------------------------------------------------------
-  if (backend == "cmdstanr") {
-    mod <- try(cmdstanr::cmdstan_model(model_path, quiet = TRUE), silent = TRUE)
-    if (inherits(mod, "try-error")) {
-      message("Recompiling CmdStan model: ", model)
-      mod <- cmdstanr::cmdstan_model(model_path, force_recompile = TRUE, quiet = TRUE)
-    }
+  message("Compiling Stan model with rstan...")
+  rstan::rstan_options(auto_write = TRUE)
+  mod <- rstan::stan_model(model_path)
 
-    fit_one <- function(dat, id) {
-      standata <- list(
-        n_obs = dat$n_obs,
-        n_ind = dat$n_ind,
-        individual = dat$individual,
-        opponent = dat$opponent,
-        xj = dat$xj,
-        z = dat$z
-      )
-      fit <- mod$sample(
-        data = standata,
-        iter_sampling = iter,
-        iter_warmup = iter / 2,
-        chains = 1,
-        parallel_chains = 1,
-        seed = seed + id,
-        refresh = 0
-      )
-      list(summary = fit$summary(), params=params, data_id = id)
-    }
-
-  } else if (backend == "rstan") {
-    message("Running with rstan backend (compiling model)...")
-    rstan::rstan_options(auto_write = TRUE)
-    mod <- rstan::stan_model(model_path)
-
-    fit_one <- function(dat, id) {
-      standata <- list(
-        n_obs = dat$n_obs,
-        n_ind = dat$n_ind,
-        individual = dat$individual,
-        opponent = dat$opponent,
-        xj = dat$xj,
-        z = dat$z
-      )
-      fit <- rstan::sampling(
-        object = mod,
-        data = standata,
-        iter = iter,
-        chains = 1,
-        seed = seed + id,
-        refresh = 0
-      )
-      list(summary = rstan::summary(fit)$summary, params=params, data_id = id)
-    }
+  fit_one <- function(dat, id) {
+    standata <- list(
+      n_obs = dat$n_obs,
+      n_ind = dat$n_ind,
+      individual = dat$individual,
+      opponent = dat$opponent,
+      xj = dat$xj,
+      z = dat$z
+    )
+    fit <- rstan::sampling(
+      object = mod,
+      data = standata,
+      iter = iter,
+      chains = 1,
+      seed = seed + id,
+      refresh = 0
+    )
+    list(
+      summary = rstan::summary(fit)$summary,
+      params  = params,
+      data_id = id
+    )
   }
+
 
   # -------------------------------------------------------------------------
   # 5. Parallel execution across datasets
@@ -165,7 +128,7 @@ run_model <- function(sim,
     stop("Please install 'future.apply' for parallel execution.")
 
   message("Running ", length(sim$data), " datasets on ", cores,
-          " cores (backend: ", backend, ")...")
+          " cores")
 
   old_plan <- future::plan()
   on.exit(future::plan(old_plan), add = TRUE)
