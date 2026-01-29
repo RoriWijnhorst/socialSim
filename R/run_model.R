@@ -88,7 +88,6 @@ run_model <- function(sim,
     )
   }
 
-
   # -------------------------------------------------------------------------
   # 4. Compile model once (outside workers)
   # -------------------------------------------------------------------------
@@ -120,28 +119,31 @@ run_model <- function(sim,
     )
   }
 
-
   # -------------------------------------------------------------------------
   # 5. Parallel execution across datasets
   # -------------------------------------------------------------------------
   if (!requireNamespace("future.apply", quietly = TRUE))
     stop("Please install 'future.apply' for parallel execution.")
 
-  message("Running ", length(sim$data), " datasets on ", cores,
-          " cores")
+  message("Running ", length(sim$data), " datasets on ", cores, " cores")
 
   old_plan <- future::plan()
   on.exit(future::plan(old_plan), add = TRUE)
   cores <- min(cores, future::availableCores())
   future::plan(future::multisession, workers = cores)
 
-  results <- future.apply::future_lapply(
-    seq_along(sim$data),
-    function(i) fit_one(sim$data[[i]], i),
-    future.seed = TRUE,
-    future.globals = list(mod = mod)  # share compiled model
-  )
+  timing <- system.time({
+    results <- future.apply::future_lapply(
+      seq_along(sim$data),
+      function(i) fit_one(sim$data[[i]], i),
+      future.seed = TRUE,
+      future.globals = list(mod = mod)  # share compiled model
+    )
+  })
 
-  message("All datasets finished.")
+  runtime_sec <- round(unname(timing["elapsed"]), 1)
+
+  message("All datasets finished. Runtime: ", runtime_sec, " s")
+
   structure(results, class = "socialSim_results")
-}
+  }

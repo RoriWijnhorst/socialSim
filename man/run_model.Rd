@@ -26,8 +26,8 @@ Fit one of the available Stan models to simulated datasets
 \examples{
 \donttest{
 if (requireNamespace("rstan", quietly = TRUE)) {
-  sim <- simulate_data(ind = 100, Valpha = 0.2, Vepsilon = 0.1, iterations = 1)
-  res <- run_model(sim, model = "Trait.stan", iter = 200, cores = 1)
+  sim <- simulate_data(ind = 50, Valpha = 0.2, Vepsilon = 0.1, iterations = 2)
+  res <- run_model(sim, model = "Trait.stan", iter = 100, cores = 2)
   summary(res)
 } else {
   message("rstan not available; example skipped.")
