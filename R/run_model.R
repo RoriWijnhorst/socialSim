@@ -4,7 +4,7 @@
 #' @param model Name of the Stan model to use (choose from available options).
 #' @param iter Number of iterations per chain (default = 1000).
 #' @param seed Random seed for reproducibility.
-#' @param cores Number of CPU cores (used if cmdstanr or rstan is available).
+#' @param cores Number of CPU cores used for parallel execution.
 #' @examples
 #' \donttest{
 #' if (requireNamespace("rstan", quietly = TRUE)) {
@@ -12,7 +12,7 @@
 #'   res <- run_model(sim, model = "Trait.stan", iter = 200, cores = 1)
 #'   summary(res)
 #' } else {
-#'   message(" rstan not available; example skipped.")
+#'   message("rstan not available; example skipped.")
 #' }
 #' }
 #' @return A list of fitted model summaries, one per dataset.
@@ -132,6 +132,7 @@ run_model <- function(sim,
 
   old_plan <- future::plan()
   on.exit(future::plan(old_plan), add = TRUE)
+  cores <- min(cores, future::availableCores())
   future::plan(future::multisession, workers = cores)
 
   results <- future.apply::future_lapply(
