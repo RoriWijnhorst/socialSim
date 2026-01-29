@@ -15,7 +15,7 @@ run_model(sim, model = NULL, iter = 2000, seed = 1234, cores = 1)
 
 \item{seed}{Random seed for reproducibility.}
 
-\item{cores}{Number of CPU cores (used if cmdstanr or rstan is available).}
+\item{cores}{Number of CPU cores used for parallel execution.}
 }
 \value{
 A list of fitted model summaries, one per dataset.
@@ -30,7 +30,7 @@ if (requireNamespace("rstan", quietly = TRUE)) {
   res <- run_model(sim, model = "Trait.stan", iter = 200, cores = 1)
   summary(res)
 } else {
-  message(" rstan not available; example skipped.")
+  message("rstan not available; example skipped.")
 }
 }
 }
