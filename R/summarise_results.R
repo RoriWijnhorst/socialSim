@@ -68,7 +68,7 @@ summarise_results <- function(results) {
     True      = as.numeric(true_vec),
     Mean_est  = as.numeric(mean_est),
     RelativeBias_percentage   = as.numeric(rel_bias)*100,
-    RelativeDisperision_percentage  = as.numeric(madm)*100,
+    RelativeDispersion_percentage  = as.numeric(madm)*100,
     check.names = FALSE
   )
 
