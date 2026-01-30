@@ -13,7 +13,7 @@ output: github_document
 <!-- badges: end -->
 
 
-The **socialSim R package** provides tools to simulate and analyse datasets of social interactions between individuals using hierarchical Bayesian models implemented in Stan. This packages accomponies [Wijnhorst et al. (2025)](https://doi.org/10.32942/X2F65M) *EcoEvoRxiv*, which details the underlying statistical models.
+The **socialSim R package** provides tools to simulate and analyse datasets of social interactions between individuals using hierarchical Bayesian models implemented in Stan. This packages accompanies [Wijnhorst et al. (2025)](https://doi.org/10.32942/X2F65M) *EcoEvoRxiv*, which details the underlying statistical models.
 
 It enables users to generate realistic social interaction data, where individual phenotypes influence and respond to those of their partners. You can simulate a sampling design by adjusting the **number of individuals, partners, and repeated dyads**. The simulation framework allows control over variation in **mean trait values, social responsiveness, and social impact** and correlation, making it suitable for research on **direct and indirect genetic effects (DGEs and IGEs)** and **interacting phenotypes**. See `?simulate_data` for a full list of adjustable parameters.
 
