@@ -7,6 +7,7 @@
 - Added accompanying preprint reference to the Description field (Wijnhorst et al. 2025.).
 - Wrapped long-running examples in `\donttest{}` because they require 'rstan' and will take longer than 5 seconds to run on CRAN machines.
 - Fixed a bug in the internal result summary function (`summarise_results()`) that affected extraction of posterior means from Stan summary matrices. This change improves robustness and does not affect the user-facing API.
+- Removed reference unneeded Additional_repositories specification.
 
 ## Comments
 Maintenance update to the **socialSim** package.
