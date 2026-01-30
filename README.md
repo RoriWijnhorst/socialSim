@@ -12,7 +12,7 @@
 
 The **socialSim R package** provides tools to simulate and analyse
 datasets of social interactions between individuals using hierarchical
-Bayesian models implemented in Stan. This packages accomponies
+Bayesian models implemented in Stan. This packages accompanies
 [Wijnhorst et al. (2025)](https://doi.org/10.32942/X2F65M) *EcoEvoRxiv*,
 which details the underlying statistical models.
 
