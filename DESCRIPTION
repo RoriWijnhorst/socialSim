@@ -1,7 +1,7 @@
 Package: socialSim
 Type: Package
 Title: Simulate and Analyse Social Interaction Data
-Version: 0.1.7
+Version: 0.1.8
 Authors@R: 
     person(
       given = "Rori Efrain",
@@ -13,19 +13,19 @@ Authors@R:
 Description:  
     Provides tools to simulate and analyse datasets of social interactions 
     between individuals using hierarchical Bayesian models implemented in Stan. 
-    The package interacts with Stan via 'cmdstanr' (available from 
-    <https://mc-stan.org/r-packages/>) or 'rstan', depending on user setup. 
-    Users can generate realistic interaction data where individual phenotypes influence 
-    and respond to those of their partners, with control over sampling design parameters 
-    such as the number of individuals, partners, and repeated dyads. The simulation 
+    Model fitting is performed via the 'rstan' package. Users can generate 
+    realistic interaction data where individual phenotypes influence and respond 
+    to those of their partners, with control over sampling design parameters such 
+    as the number of individuals, partners, and repeated dyads. The simulation 
     framework allows flexible control over variation and correlation in mean trait 
-    values, social responsiveness, and social impact, making it suitable for research on 
-    interacting phenotypes and on direct and indirect genetic effects ('DGEs' and 'IGEs'). 
-    The package also includes functions to fit and compare alternative models of social 
-    effects, including impact–responsiveness, variance–partitioning, and trait-based 
-    models, and to summarise model performance in terms of bias and dispersion. For more 
-    detailed description of the available models and impact-responsiveness, see
-    accompanying preprint Wijnhorst et al. (2025) <doi:10.32942/X2F65M>.
+    values, social responsiveness, and social impact, making it suitable for 
+    research on interacting phenotypes and on direct and indirect genetic effects 
+    ('DGEs' and 'IGEs'). The package also includes functions to fit and compare 
+    alternative models of social effects, including impact–responsiveness, 
+    variance–partitioning, and trait-based models, and to summarise model 
+    performance in terms of bias and dispersion. For a more detailed description 
+    of the available models and impact–responsiveness, see the accompanying 
+    preprint Wijnhorst et al. (2025) <doi:10.32942/X2F65M>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-GB
@@ -49,4 +49,3 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 URL: https://github.com/RoriWijnhorst/socialSim
 BugReports: https://github.com/RoriWijnhorst/socialSim/issues
-Additional_repositories: https://stan-dev.r-universe.dev
