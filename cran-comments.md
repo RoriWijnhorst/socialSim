@@ -3,13 +3,9 @@
 * R-hub: Windows, Ubuntu  
 * devtools::check() and R CMD check --as-cran passed with 0 ERRORs, 0 WARNINGs, and 0 NOTEs  
 
-## Changes since the previous CRAN release
-- Added accompanying preprint reference to the Description field (Wijnhorst et al. 2025.).
-- Wrapped long-running examples in `\donttest{}` because they require 'rstan' and will take longer than 5 seconds to run on CRAN machines.
-- Fixed a bug in the internal result summary function (`summarise_results()`) that affected extraction of posterior means from Stan summary matrices. This change improves robustness and does not affect the user-facing API.
-- Removed reference unneeded Additional_repositories specification.
+## Changes since previous CRAN release:
+- Changed preprint reference to the published article reference in the Description field (Wijnhorst et al. 2026 J. Evol Biol.), including.
 
-## Comments
-Maintenance update to the **socialSim** package.
+## Package description
 The **socialSim** package provides tools to simulate and analyse datasets of social interactions between individuals using hierarchical Bayesian models implemented in Stan. It is designed for research on interacting phenotypes and on direct and indirect genetic effects (DGEs and IGEs).
 
